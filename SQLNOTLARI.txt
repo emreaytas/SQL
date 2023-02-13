@@ -5,7 +5,7 @@ eğer bir sql sayfasında işlem yapacaksak bunu bir programlama dili gibi satı
 
 mysql workbench ile tablolar oluşturup işlemler yapacağız. bu phpmyadminden farklı bir web sunucusuna ihtiyacı yok. 
 
-///Create database... veritabanı oluşturmak./////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///...Create database... veritabanı oluşturmak.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 eğer sql komutları ile çalışmak istersek o zaman \sql yaparak işlemlerin geri kalanında sql komutlarını kullanabiliriz.
 mesela \py dersek python komutlarını kullandıracağız. \js yaparsak mesela o zaman javascript komutları ile işlem yapabileceğiz. 
@@ -79,8 +79,8 @@ CREATE TABLE IF NOT EXISTS KONTROL_LISTESI(
      GOREV_NO INT,
      ACIKLAMA VARCHAR(255) NOT NULL,
      TAMAMLANDI BOOLEAN NOT NULL DEFAULT FALSE,
-     PRIMARY KEY(YAPILACAK_GOREV, GOREV_NO), // birincil anahatarları PRIMARY KEY(birincil anahtarlar) gibi bir yapı ile sırasıyla belirtebiliriz tek tek prımary key olarak belirteceğimizin yerine...
-     FOREIGN KEY(GOREV_NO) // ikincil anahatarları da biz tek bir satırda belirtebiliriz. FOREIGN KEY(ikincil anahtarlar) gibi bir yapı ile tablo içinde ikincil anahtar olarak kullanılacak olan ikincil anahatarları belirtebiliriz.
+     PRIMARY KEY(YAPILACAK_GOREV, GOREV_NO),
+     FOREIGN KEY(GOREV_NO),
           REFERENCES GOREVLER(GOREV_NO) //burada biz referansıon nerden geleceğini ve hangilerinin geleceğini belirtiriz.
           ON UPDATE RESTRICT // bu da bir kısıttır. RESTRICT bu tabloda GOREV_NO'nun değiştirilemeyecek bir veri olduğunu belirtiyor...
           ON DELETE CASCADE // bu da bir ksıttır. eğer referans olan GOREVLER tablosundan gelen bir GOREV_NO silinirse KONTROL_LISTESI'deki GOREV_NO'ları silecek.
@@ -95,14 +95,14 @@ CREATE TABLE IF NOT EXISTS KONTROL_LISTESI(
 birincil anahtar tablodaki her satırı benzersiz şekilde tanımlayan sutun veya sutun grubuna verilen addır.
 birincil anahtar sutunun null değerleri olamaz.her tabloda bir tane primary key sutun veya sutun grubu olmalı.
 birincil anahatar birden çok sutundan oluşuyor ise kombinasyonu benzersiz olmalıdır.  
-birincil anahatar benzersiz değerler içermelidir. eğer bir tabloda birden fazla birincil anahatar sutunu var ise birbiri ile kombinasyonu benzersiz olmalıdır.
+birincil anahatar benzersiz değerler içermelidir. eğer bir tabloda birden fazla birincil anahatar sutunu var ise birbiri ile kombinasyonu benzersiz olmalıdır. mesela iki tane veri var ve primary key olamıyor o zaman ikisinin kombinasyonlarından primary key oluşturabiliriz.
     
-......... örnek tablolar oluşturduk. mesela bir kullanici birden fazla rolleri olsun,bir rol birden fazla kullanciya verilebilsin...
+......... örnek tablolar oluşturduk. mesela bir kullanici birden fazla rolleri olabilsin,bir rol birden fazla kullanciya verilebilsin...
 
      use testdb;
 create table if not exists kullanicilar(
 
- kullanici_no INT AUTO_INCREMENT PRIMARY KEY,
+ kullanici_no INT AUTO_INCREMENT PRIMARY KEY, //  PRIMARY KEY tanımlaması yaptık.
  kullanici_adi VARCHAR(40),
  parola varchar(20),
  eposta varchar(40)
@@ -116,11 +116,11 @@ create table if not exists roller(
  
 );
 
-create table if not exists kullanici_roller(
+create table if not exists kullanici_roller( // kullanici tablosundan kullanici roller tablosundan ise rolleri alacak.
 
    rol_no INT, 
    kullanici_no INT,
-   PRIMARY KEY(rol_no, kullanici_no), // PRIMARY KEY'leri belirtiyoruz. 
+   PRIMARY KEY(rol_no, kullanici_no), // burada iki veriyi kullanarak biz primary key olan bir sutun ürettik.
    FOREIGN KEY(rol_no) // burada biz foreign key olacak verinin nereden geleceğini belirtiyoruz. references ile.
       references roller(rol_no),
    foreign key(kullanici_no)
@@ -128,18 +128,30 @@ create table if not exists kullanici_roller(
 
 
 );
-// rol_no'su primary key olarak belirlenemez. 
+// rol_no'su primary key olarak belirlenemez. çünkü bir rol numarası birden fazla kullanıcıya verilebilecek. kullanici numarasıda primary key olamaz çünkü bir kullaniciya birden fazla rol tanımlanabilecek... ama eğer kullanici_no ve rol_no kullanarak ürettiğimiz kombinasyon primary key olacak.
 
+// mesela primary key her zaman tablo olurken verilmek durumunda değil unutmuş olabiliriz veya gerek görmemiş olabiliriz... ne yapacağız silip baştan mı yapacağız? = 
+... örnek bir tablo oluşturalım. primary key koymayı unuttuğumuz veya gerek göremdiğimiz bir tablo olsun.
+
+   use testdb;
+   create table if not exists pkdemo(
+    numara INT,
+    tanim varchar(255) not null
+  );  
+  //  bit tablonun birincil anahtarı var mı yok mu iki yolla görebiliriz = birincisi tablonun table inspector kısmında index kısmında keyler gözükebilir...
+      diğer bir yolu ise describe pkdemo; yaparsak eğer bilgileri görürürz.
+
+// içine primary koymayı unuttuğmmuuz veya gerek görmediğimiz tabloya primary key eklemek istersek o zaman = alter table pkdemo add primary key(numara); deriz.  
+    alter table dbname bir değişim olacak ismini belirttiğimiz tabloda demek.  add demek ekle demek. add primary key dersek eğer o zaman numara sutununa birincil anahtar özelliği eklenmiş demektir.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////...FOREIGN KEY. ikincil anahtar kullanimi...////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 ##################################################################################################################################################################3
-
-
-
-
-
