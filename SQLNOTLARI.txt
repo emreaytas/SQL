@@ -1,7 +1,134 @@
 ####...SQL...##############################################################################################################################################################3
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+eğer bir sql sayfasında işlem yapacaksak bunu bir programlama dili gibi satır satır okunduğunu bilmek lazım ve o sql sorgusu çalışıtığında işlemler o içerideklere göre olur.
+    mesela elimizde testdb ve sakila adlı iki tane database var ve seçili olan testdb biz eğer sql sorgusunda use sakila; der ve tablo oluşturursak eğer o zaman sakila üzerinde tablo oluşturma olur.    
 
+mysql workbench ile tablolar oluşturup işlemler yapacağız. bu phpmyadminden farklı bir web sunucusuna ihtiyacı yok. 
+
+///Create database... veritabanı oluşturmak./////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+eğer sql komutları ile çalışmak istersek o zaman \sql yaparak işlemlerin geri kalanında sql komutlarını kullanabiliriz.
+mesela \py dersek python komutlarını kullandıracağız. \js yaparsak mesela o zaman javascript komutları ile işlem yapabileceğiz. 
+
+bağlantı gerçekleştirmek için mysql shell ile \connect kullaniciadi@localiselocalhost değilse farklı bir host \connect root@localhost bunu dedik ve şifreyi girdik sonra...  MySQL  localhost:33060+ ssl ÇIKTI... biz \connect ile bir porta bağlanırken ; kullanmayız. komutlar için ; kullanırız... daha doğrusu \ ile kullanılan komutlar için ; kullanmayız. geri kalan komutlar için ; kullanırız...
+
+show databases; dersek tüm veritabanlarını görebiliriz. içinde bulundupumuz port içerisinde...
+  sql shell'de her komuttan sonra ; kullanmamız lazım...
+veritabanları arasında geçiş yapabilmek için use veritabanıadi yapısı kullanmamız lazım. use sakila; gibi...
+   eğer içinde olduğumuz veritabanının tablolarını görmek istersek o zaman show tables; deriz.
+
+eğer veirtabanı değiştirmek istersek içinde bulunduğumuz database içinde önce show databases; der sonra use istenenveritabanı; ile istediğimiz veritabanını kullanabiliriz.
+
+eğer bir veritabanı oluşturmak istersek o zaman create database ismi; yaparsak o zaman biz istediğimiz isimde bir veritabanı oluştururuz. ve show databases; diyerek o zaman elde var olan veritabanlarını görebiliriz.
+   ancak bir veritabanı oluştururken karakter setine dikkat etmezsek o zaman türkçe karakter kullanırken sorunlarla karşılaşabiliriz.  
+   create database aynisimdebidb o zaman böyle bir veritabanı var der.
+   drop ile biz tablo ve veritabanı kaldırabiliriz, silebiliriz. drop database emre; diyerek biz bir veritabanını silebiliriz. mesela drop database emre; eğer böyle bir veritabanı yoksa işlem olmaz ve bunu belirtir.
+
+karakter set belirterek bir veirtabanı oluşturmak istersek o zaman create database dbismi character set utf8 collate utf8_general_ci ... diyerek bu db türkçe karakterleride alabilir... 
+
+workbecnhte drop ve create database komutları ile istenen işlemleri yapabiliriz arayüz ile.,
+
+aynı isimde database kullanmak istersek eğer bize bir uyarı verecek bi işlemi yaptırmayacak...
+
+character set utf8 diyerek biz karater seti collate utf8_general_ci diyerek ise lehçe belirtiriz.
+
+workbenchte yıldırım işareti ile komutu uygulattırırız...
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///Create table... tablo oluşturmak.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+workbecnhte use olarak belirtilen veritabanı koyu renkli olarak gösterilir. eğer biz bir veritabanı ğzeirnde illem yapmak istersek o zaman onun use olarak seçili olduğundan emin olmak lazım.
+  use olarak kullanmak için üzerine çift tıklama veya use dbname; yağabiliriz.
+
+eğer tablo oluşturmak istersek o zaman CREATE TABLE IF NOT EXISTS GOREVLER; burada CREATE TABLE İLE tablo oluştur deriz ve IF NOT EXISTS ile ise eğer yoksa böyle bir tablo oluştur deriz. eğer varsa uyarı verir. GOREVLER ise eğer tablonun ismi olacak.
+
+    CREATE TABLE IF NOT EXISTS GOREVLER(
+        GOREV_NO INT AUTO_INCREMENT PRIMARY KEY, // GÖREVNO ile biz bir sutunun adini belirleriz INT ile hangi yapıda veri alacağını belirtiriz. AUTO_INCREMENT ile ise otomatik değer alan bir alan olsun isteriz. PRIMARY KEY diyerek ise  aynı GOREV_NO olan birden fazla satir olmasin diye...
+        GOREV_ADI VARCHAR(255) NOT NULL, // burada ise önce sutun ismi sonra ise VARCHAR diyerek bir karakter dizisi olduğunu 255 adet maximum karakter alacağını NOT NULL ile ise NULL olmayacağını belirtiriz.
+        BASLANGIC_TARIHI DATE, // DATE türünden bir veri yükleyeceğiz BASLANGIC_TARIHI kısmında...
+        BITIS_TARIHI DATE,
+        DURUM TINYINT NOT NULL, // TINYINT demek byte gibi bir şey. az alan kaplayan int türü...
+        ONCELIK TINYINT NOT NULL,
+        ACIKLAMA TEXT, //  bir text olacak...
+        KAYIT_TARIHI TIMESTAMP DEFAULT CURRENT_TIMESTAMP // sistemin zamanını alacak...
+    )ENGINE INNODB;
+
+tablo oluştururken bizim dikkat etmemiz gereken nokta şudur = her sutun , ile ayrılır en sondaki sutundan sonra , koyulmaz çünkü bir ayırmaya gerek yok...
+
+workbecnhte tablonun özelliklerini Tables sağtık Table inspector ve Columns kısmında tablodaki sutunların özelliklerini görebiliriz...
+    ama bunu sql sorgusu ile yapabiliriz... = DESCRIBE GOREVLER; // böylece biz GOREVLER tablosundaki alanların özelliklerini vs görebiliriz.
+
+describe tablename ile bu tablodaki verilerin vs özelliklerini görebiliriz...
+  // tanımla tabloadi kısaca.
+
+...mesela biz belli alanlara bazı kısıtlar koymamız gerekebilir. örneğin görevlerle ilişkili bir tablo oluşturup elimizdeki tabloda primary olan key'i yabancı key olarak tanımlamamız gerekebilir. veya bir tabloda bir veri güncelleniyor veya siliniyorsa o tablo ile ilintili olan verilerin ona göre değişmesini istiyorsak kısıt koymamız gerekir. bu işlemlere kısıt koymak denir.
+   elimizde bir tablo var ve bu tablo ile ilişkili başka bir tablo daha var ana tablodaki veriyi kısıtlı veri olarak oluşturusak eğer herhangi bir tabloda o veri üzerinde olan değişim silinme vs tüm o kısıtlı veriiyi kullanan tablolarda güncellenir.
+   
+
+
+
+.................. kısıt koyma başka tablolarda birbiriile ilintili tablolarda olan verilere kısıt koyma.
+
+   use testdb;
+
+CREATE TABLE IF NOT EXISTS KONTROL_LISTESI(
+     YAPILACAK_GOREV INT AUTO_INCREMENT,
+     GOREV_NO INT,
+     ACIKLAMA VARCHAR(255) NOT NULL,
+     TAMAMLANDI BOOLEAN NOT NULL DEFAULT FALSE,
+     PRIMARY KEY(YAPILACAK_GOREV, GOREV_NO), // birincil anahatarları PRIMARY KEY(birincil anahtarlar) gibi bir yapı ile sırasıyla belirtebiliriz tek tek prımary key olarak belirteceğimizin yerine...
+     FOREIGN KEY(GOREV_NO) // ikincil anahatarları da biz tek bir satırda belirtebiliriz. FOREIGN KEY(ikincil anahtarlar) gibi bir yapı ile tablo içinde ikincil anahtar olarak kullanılacak olan ikincil anahatarları belirtebiliriz.
+          REFERENCES GOREVLER(GOREV_NO) //burada biz referansıon nerden geleceğini ve hangilerinin geleceğini belirtiriz.
+          ON UPDATE RESTRICT // bu da bir kısıttır. RESTRICT bu tabloda GOREV_NO'nun değiştirilemeyecek bir veri olduğunu belirtiyor...
+          ON DELETE CASCADE // bu da bir ksıttır. eğer referans olan GOREVLER tablosundan gelen bir GOREV_NO silinirse KONTROL_LISTESI'deki GOREV_NO'ları silecek.
+
+
+)ENGINE INNODB; // bu olmadan direkt olarak ); kullanarakta tabloyu belirtebilirdik.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///PRIMARY KEY... birincil anahtar kullanımı.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+birincil anahtar tablodaki her satırı benzersiz şekilde tanımlayan sutun veya sutun grubuna verilen addır.
+birincil anahtar sutunun null değerleri olamaz.her tabloda bir tane primary key sutun veya sutun grubu olmalı.
+birincil anahatar birden çok sutundan oluşuyor ise kombinasyonu benzersiz olmalıdır.  
+birincil anahatar benzersiz değerler içermelidir. eğer bir tabloda birden fazla birincil anahatar sutunu var ise birbiri ile kombinasyonu benzersiz olmalıdır.
+    
+......... örnek tablolar oluşturduk. mesela bir kullanici birden fazla rolleri olsun,bir rol birden fazla kullanciya verilebilsin...
+
+     use testdb;
+create table if not exists kullanicilar(
+
+ kullanici_no INT AUTO_INCREMENT PRIMARY KEY,
+ kullanici_adi VARCHAR(40),
+ parola varchar(20),
+ eposta varchar(40)
+ 
+);
+
+create table if not exists roller(
+   rol_no INT AUTO_INCREMENT,
+   rol_adi varchar(50),
+   PRIMARY KEY(rol_no) 
+ 
+);
+
+create table if not exists kullanici_roller(
+
+   rol_no INT, 
+   kullanici_no INT,
+   PRIMARY KEY(rol_no, kullanici_no), // PRIMARY KEY'leri belirtiyoruz. 
+   FOREIGN KEY(rol_no) // burada biz foreign key olacak verinin nereden geleceğini belirtiyoruz. references ile.
+      references roller(rol_no),
+   foreign key(kullanici_no)
+      references kullanicilar(kullanici_no)
+
+
+);
+// rol_no'su primary key olarak belirlenemez. 
 
 
 
@@ -11,8 +138,6 @@
 
 
 ##################################################################################################################################################################3
-
-
 
 
 
