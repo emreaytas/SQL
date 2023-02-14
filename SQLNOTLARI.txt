@@ -194,6 +194,38 @@ select * from fkdemo.kategoriler; // eğer böyle olursa istenen veritabanının
 eğer birbiri ile ilişkili verileri eklersek eğer olmayan bir anahtara veri vermeye kalkarsak eğer hata alırız.
 
 update fkdemo.kategoriler set kategori_no = 100 where kategori_no = 1; // burada ise önce hangi veritabanın hangi tablosunda işlem yapacağız belirtiriz. set ile yeni veriyi belirleriz. where ile hangisinin güncelleneceğini belirtiriz.
+   değişecek verinin yabancı anhatar olarak kullanılmaması lazım. yabancı anahatarın tanımlı oludğu tabloya biz o anahtarın sahip olmadığı bir değeri koyamayız. 
+
+eğer bir tabloyu drop etmek istersek drop table db.table yani drop table fkdemo.urunler; yapmamız lazım.
+
+.................................
+
+create table if not exists urunler(
+
+urun_no int auto_increment primary key,
+urun_adi varchar(100) not null,
+kategoriNumarasi INT, 
+constraint fk_kategori
+    foreign key(kategoriNumarasi)
+        references kategoriler(kategori_no) 
+        on update cascade  // bunun anlamı ise eğer yabancı anahtarda bir değişim olmaya kalkarsa o zaman onunla bağlı olan tüm tablolarla o anahtarın değerini güncelle demektir...
+        on delete cascade // bunu yaparsak eğer herhangi bir satır silinirse bağlı olan tablolarla karşılık geleni sil demek.
+);  
+
+.................................
+
+select * from fkdemo.urunler; // burada kategori numarası bir ve iki olan ürünler var.
+
+update fkdemo.kategoriler set kategori_no = 100 where kategori_no = 1; // biz update on cascade ve delete on cascade yaptığımız için hem kategori_no'su değişti kategoriler tablosundaki hemde urunlerde kategori_no'ları güncellendi. biribiri ile bağlı olanlar değiştiler.
+
+select * from fkdemo.urunler; // burada kategori_no'su 1 olanlar yüz oldu biribiri ile bağlı olan veriler güncellendi. kategoriler'deki kategori_no'su 1 olan 100 oldu. ve urunlerde kategori_no'su 1 olanlar 100 oldu.
+
+delete from fkdemo.kategoriler where kategori_no = 2; // buarada ise eğer on delete cascade kullanmasaydık eğer hata alırdık ama şimdi almadık. 
+    // delete from db.table ile tabloyu where ile ise nereden silme olacağını seçeceğiz...
+    // burada kategori numarası 2 olan numarayı yok ettiğimiz için urunlerde kategori_no'sunu referans alan kategoriNumarasi 2 olan ürünlerde silinecek. çünkü birbirleri ile ilişkileri var...
+
+..................................
+
 
 
 
