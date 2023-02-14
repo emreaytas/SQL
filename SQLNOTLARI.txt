@@ -149,6 +149,52 @@ create table if not exists kullanici_roller( // kullanici tablosundan kullanici 
 
 ////...FOREIGN KEY. ikincil anahtar kullanimi...////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+mesela elimizde iki tane tablo var birisinin içindeki veri diğerinden referans ile gelecek o zaman ikisninde aynı isimde olmasına gerek yok çünkü referans ile birbirine bağlanacak bu yapılar. farklı adlarda olsalarda referans ile bağlandıkları için aynı değerleri taşıyacaklar.
+
+ // biz burada ikincil anahatar olacak yapının nereden geleceğini belirttik.
+ constraint fk_kategori
+    foreign key(kategoriNumarasi)
+        references kategoriler(kategori_no) 
+
+
+create database fkdemo;
+use fkdemo;
+
+create table if not exists kategoriler(
+kategori_no INT auto_increment primary key,
+kategori_adi varchar(100) not null
+);
+
+create table if not exists urunler(
+
+urun_no int auto_increment primary key,
+urun_adi varchar(100) not null,
+kategoriNumarasi INT, 
+constraint fk_kategori
+    foreign key(kategoriNumarasi)
+        references kategoriler(kategori_no) 
+
+); // burada bir db oluşturduk ve sonra use diyerek onun üzerinde işlem yapacağımızı belirttik. sonra tablolar oluşturup hangi değerlerin birbiri ile birleşeceğini belirteceğiz.
+
+
+      INSERT INTO kategoriler(kategori_adi)
+          values('akilli telefon')
+          // burada insert diyerek eleman ekleyeceğimizi belirtiriz.
+  
+          // select * from kategoriler;  değerleri ekledikten sonra 1 akilli telefon 2 akilli saat oldu nedeni ise kategori_no auto_increment olduğu için gelen verileri göre sırası ile artacak...        
+
+
+instert into tabloadi(tablodaki sutun)
+     values ve ('') içinde değerler ile biz verileri ekleriz istenen tablonun istenen sutununa...
+    values (''),(''),(''); değerleri yazabiliriz. 
+
+
+select * from fkdemo.kategoriler; // eğer böyle olursa istenen veritabanının istenen tablosu üzerinde çekme işlemi yapılır.
+
+eğer birbiri ile ilişkili verileri eklersek eğer olmayan bir anahtara veri vermeye kalkarsak eğer hata alırız.
+
+update fkdemo.kategoriler set kategori_no = 100 where kategori_no = 1; // burada ise önce hangi veritabanın hangi tablosunda işlem yapacağız belirtiriz. set ile yeni veriyi belirleriz. where ile hangisinin güncelleneceğini belirtiriz.
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
