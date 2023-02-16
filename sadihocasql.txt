@@ -51,6 +51,16 @@ select * dersek eğer her şeyi seç demek from ile ise
 SELECT * FROM emre.tdci WHERE soyisim; böyle yaparsak eğer emre.tdci'dan soyisimlerin hepsini getir dedik. 
 
 
+eğer sadece istenen satırı seçmek istersek o zaman select * from db.table where isim = "ali"; ismi ali olan tüm satırları getirir.
+eğer sadce belli sutunları istersek o zaman select isim,soyisim from db.table where date = '12-12-2000'; yaparsak eğer o zaman sadece istenen tarihte olanların isim ve soysimleri gelir.
+
+eğer select isim(eğer * yaparsak tüm satırı getirir çünkü tüm verileri getirir böylece tüm satır gelmiş olur.) from db.table where name = "emre" or surname =  "aytas"; böylece hem ismi emre hem soyadı aytas hemde hem ismi hemde soyadı aytas olanları getirecek ama sadece isimlerini getirecek.
+
+where isim = "emre" and soyisim = "aytas" yaparsak eğer o zmaan sadece ismi ve soyismi emre aytaş olanlar üzerinde işlem yapacak.
+
+mesela soyisimlere göre sıralamak istersek select * from db.table order by soyisim; yaparsak önce null sonra a, b , c ascii'ye göre sıralama olur.
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///...delete ve update işlemleri.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
