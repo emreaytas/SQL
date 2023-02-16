@@ -36,8 +36,19 @@ eğer bir tabloya veri eklemek isterseke insert into tablo (değişkenler sıras
    INSERT INTO `tdci` (`isim`, `soyisim`, `tckimlik`, `dogumtarihi`) VALUES ('ali', 'veli', '344344434', '12.11.2001')
    instert into emre.tdci(isim,soyisim,tckimlik,dogumtarihi) values('emre','aytas','40708612266','19-11-1111'); bunu verirsek eğer o zmaan bir kişi daha eklenir bu tabloya.
 
+istersek elaman eklemeyi sırası ile değil istenen sıraya görede yapabiliriz. insert into db.table(soyisim,isim,tckimlik,dogumtarihi) values('aytas','emre','42342342','23-23-2333'); şeklinde olabilir. ama default olsa idi o zaman sutunların sırasına göre girmek gerekirdi...
 
 
+instert into db.table values(değerler); yaparsak eğer o zaman default olarak sırası ile ekleme yapar. 
+sql'de tarih olarak anlaması için '12-23-2000' şeklinde tırnaklar içinde ve tire ile ayırarak yazmak lazım.
+
+
+
+eğer sırası ile veri girmem gerekirken boş alan bırakırsak eğer değer almayanlar null olacak eğer null değerler alacak.
+
+
+select * dersek eğer her şeyi seç demek from ile ise 
+SELECT * FROM emre.tdci WHERE soyisim; böyle yaparsak eğer emre.tdci'dan soyisimlerin hepsini getir dedik. 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
