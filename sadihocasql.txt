@@ -1,6 +1,48 @@
 ###...SADİ HOCA SQL...###############################################################################################################################################################
+Sql ile veritabanlarını yöneteceğiz...
+
+////...mysql ile sql komutlarına giriş...////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+phpmyadmin ile çalışacağız.
+..select komutu sorgulamak için kullanılır. sorgu olarak yollaruz meseka select 4 * 5 dedik ve go dedik o zaman bize 20 cevabını verir. komut veririz ve sonuç verir. komut veririz ve bir sonuç döndürmeye çalışır. select'ten sonra gelecek olan komuta göre işlem yaparız.
+select 4 * 5 as veli; dersek eğer o zaman bana sonucu veli isminde getir deriz. select ali as veli dersek ali'yi bize veli sutununda getirecek..
+
+
+select version(); dersek eğer bu fonkisiyon çalışır ve değerini return ederiz
+select now(); dersek bu fonkisyonun değerini sorgulamış oluruz.
+pi(); fonkisiyonu ise pi sayısını return eder;
+select'ten sonra gelecek olan cümle istenene sorgudur.
+show databases; dersek eğer veritabanlarını görürüz. bu komutu veritabanlarını görmek istediğimiz sunucuya yollamamız lazım. bu sunucular local sunucular olabilir, web sunucusu olabilir.
+
+bir veritabanı birden fazla sunucuya gönderilebilir.
+
+veritabanı oluşturmak için create database ve ismi; komutu veririz.
+bir veritabanı kullanılsın verilen komutlar onun için çalışsın istersek eğer o zaman use dbismi; ile istenen veri tabanını kullanırız.
+
+mesela biz bir tablo oluşturduk ve isim uzunluğunu 20 belirledik. tüm satırlarda bu isim sutunun boyutu 20 olur. eğer her seferinde girilen veri uzunluğu aynı ise mesela tc numarası falan o zaman static olarak belirlemek daha iyidir. ama isim soyisim gibi değişkenler varsa o zmaan varchar kullanmak daha mantıklıdır.
+
+create table if not exists tabloismi(); yapısı ile biz tablo oluştururz.
+
+CREATE TABLE `emre`.`tdci` (`isim` VARCHAR(20) NOT NULL , `soyisim` VARCHAR(20) NOT NULL , `tckimlik` VARCHAR(11) NOT NULL , `dogumtarihi` DATE NOT NULL ) ENGINE = InnoDB;
+    ...burada örnek olarak yazabileceğimiz bir tablo. 
+ 
+create table tdci if not exists(isim varchar(20) not null, soyisim varchar(20) not null, tckimlik varchar(20) not null, dogumtarihi date not null)ENGINE = InnoDB; 
+
+
+describe tdci yaparsak eğer istenen tablonun yapısını sorgulayabiliriz.
+describe istenenveritabanı.istenentablo; aslında ypı bu olmalı describe emre.tdci; // böylece istenen veritabanının tablosunu görebiliriz.
+
+eğer bir tabloya veri eklemek isterseke insert into tablo (değişkenler sırası ile bunu girmezsek default olarak soldan sağa kabul edecek.) values(sırası ile veriler.)  
+   INSERT INTO `tdci` (`isim`, `soyisim`, `tckimlik`, `dogumtarihi`) VALUES ('ali', 'veli', '344344434', '12.11.2001')
+   instert into emre.tdci(isim,soyisim,tckimlik,dogumtarihi) values('emre','aytas','40708612266','19-11-1111'); bunu verirsek eğer o zmaan bir kişi daha eklenir bu tabloya.
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///...delete ve update işlemleri.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
