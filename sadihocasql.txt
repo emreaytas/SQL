@@ -65,8 +65,123 @@ mesela soyisimlere göre sıralamak istersek select * from db.table order by soy
 
 ///...delete ve update işlemleri.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+update ile biz güncelleme delete ile ise silme komutu vereceğiz. update 
+eğer ir güncelleme yapacaksak bir satırda mesela o zaman diğerlerinden farklı olan özelliklerine göre işlem yapacağız.
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+UPDATE emre.tdci set soyisim = 'ddd' WHERE tckimlik = '40708612266';
+   // önce update emre.tdci ile güncelleme yapılacak yer set soysisim = 'dddd' ile yapılacak değişiklik where tckimlik ile ise nerede yapılacak bu güncelleme belirleriz.
+
+delete from emre.tdci(tablo) where isim = 'BMW'(koşul) komple bu tablodan bu satır silinecek.     
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+////...tablolarda yapısal değişiklik.(alter)...database ve tablo düşümü (drop)////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+alter TABLE emre.tdci add column telefon varchar(20); // alter table dersek eğer tabloda isim yapacağımızı belli ederiz sonra tablo ismini gireriz db.table şeklinde sonra ise yapılacak işlemi gireriz. add column dersek eğer o zmaan yeni bir kolon ekle demek add column telefon varchar(20) diyerek ise eklenecek olan tablonun ismi ve yapısını belirtiriz. 
+
+bir database'yi drop etmek istersek eğer drop database ismi;
+bir tabloyu drop etmek istersek o zaman drop table db.table(veya direkt sadece tablo ismi ama karışıklık olabilir.);
+
+mesela bir kolunu düşürmek istersek o zzmaan alter table (çünkü tabloda bir değişim olacak.) db.tablo drop column(kolon düşür) kolonismi;
+   alter table emre.tdci drop column telefon; böylece kişilerdeki telefon bilgisi gider.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//...Birincil anahtar (primary key)...//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+primary key aslında bir koşuldur...
+mesela bir tabloda primary key olan bir alan var ve biz onun primary key olmasını istemiyoruz artık o zaman alter table drop primary key
+eğer bir tabloda bir sutunu primary key yapmak istersek eğer o zaman alter table emre.calisan add primary key istenensutun tckno; gibi bir yapı ile primary key eklemesi yapabiliriz.
+
+eğer bir tablodaki bütün primary keyleri iptal etmek istersek primary keyleri drop etmek istersek o zaman... alter table db.table drop primary key; yaparız.
+
+bir sutun primary key olursa eğer her satır için farklı değer alacak mesela tckimlik numarası.
+
+ALTER table emre.calisan add PRIMARY key tckno; // bu şekilde de istenen bir sutunu primary key yapabiliriz.
+eğer tüm sutunlar primary key olsun istersek eğer. alter table emre.calisan add primary key yaparız.
+
+alter table db.table add primary key; yaparsak eğer tüm sutunlar primary key olur.
+
+primary keyler null olamaz. bazı databaseler null olarak sadece bir tane kabul eder. birden fazla null kabul etmez çünkü her değer farklı olmalı.
+
+foreign key InnoDB ENGINE ile çalışıyor.
+
+iki tane tablo yapalım calisan ve departman. bir çalışan tek bir deprartmanda çalışabilir. bir departmanda birden fazla çalışan olabilir.
+
+mesela elimizde iki tane tcsi olan bir tablo var ve biz tckno'yu primary key yapmak istiyoruz o zmaan hata verecek. bunun sebebi ise bellidir. primary key olan sutun sadece bir tane değer alabilir.
+
+eğer bir tablo oluştururken biz bir sutunun primary key olmasını istersek o zaman tckimlik varchar(11) primary key; gibi bir şekilde tanımlayabiliriz.
+   veya birden fazla sutunu primary key yapmak istersek eğer o zaman primary key(sutun isimleri gibi yapabiliriz.)
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////...join kurulması...////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+motorlardan mylSam foreign key kullanımı sunmuyor bunun için engine olarak InnoDB kullanmamız lazım. mylSam eski bir motor çünkü.
+   bu motorlar verilerin çekimini yazımını vs yapar. diskte nasıl saklanacağını vs belirler.
+
+unique ile primary farkı nedir = unique bir kolonun kendi içinde unique olmasını sağlar yani kolon unique ise eğer o kolon için birden fazla veri tekrarı olamaz. ama primary key bununla birlikte Birincil anhatar olarak sağlanıyor, üzerinde index kurup ordan tabloyu tarayacağı için ona öncelik veriyor.
+      mesela iki kolon unique olursa eğer her kolon kendi içinde tekrarlatmama yapacak. ama primary key olursa eğer iki kolon iki verininde aynı olmadığı koşulunu sağlatacak. mesela isim ve soyisim olsun eğer ikiside unique olursa hem isimler tekrarlanmaz hemde soyisimler ama primary key olursa ikiside isim ve soyisimin aynı anda aynı yapmama kuralını uygular.
+      yani iki kolonda unique olursa emre aytas ve emre aysol olmaz.  ikiside primary olursa eğer bu durum olabilir.
+      unique olunca sadece bir tane isim bir tane soyismi olabilir satırlarda ama primary key olursa birden fazla isim birden fazla soyisim olabilir ama kombinasyonları aynı olamaz.
+
+primary key tabloyu Birincil olarak tamamlayan yapıdır.
+
+....
+use emre;
+
+CREATE TABLE IF NOT EXISTS calisan(
+   id INT PRIMARY KEY,
+   ismi varchar(20),
+   maas INT(11), 
+   dept INT(11)
+)ENGINE = INNODB;
+
+CREATE TABLE IF not EXISTS  departman(
+  id INT(11) PRIMARY KEY,
+  ismi varchar(20),
+  butce INT(11),
+  yonetici INT(11)
+    
+)ENGINE = INNODB;
+
+INSERT INTO emre.calisan VALUES('15','ali','5000','1');
+INSERT INTO emre.calisan VALUES('16','veli','5500','2');
+
+INSERT INTO emre.departman VALUES('1','muhasebe','100000','15');
+INSERT INTO emre.departman VALUES('2','bilisim','100000','16'); 
+   ...// biz burada iki tane tablo oluşturduk. 
+eğer bu tablolarda select * from calisan, departman where calisan.dept = departman.id; // yani ne demek olur calisanların yanına calisanin içindeki departman numarasının departmanı gelir.
+
+
+mesela select * from tablo1,tablo2 dedik. o zaman satır satır önce tablo1'in ilk satırını yanına tablo2'nin ilk satırını getirir. tabloların satırları yan yana olarak satır satır yazılır.   
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///...foreign key ve 3 tablo join edilmesi.../////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+foreign key için InnoDB motorunu kullanmak en mantıklısı olacak.
+
+CREATE table if not EXISTS projeler(
+    id INT, // buradaki int değeri projelerin int değeri olacak.
+    isim varchar(20), 
+    departman_id int, // buradaki departman_id kısmı departman tablosunun değerleri ile birleşecek...
+    FOREIGN KEY(departman_id) // ikincil anahtar olacak olan değerleri sçeeriz.
+        REFERENCES departman(id) // bu değerin hangisi ile bağlanacağını referans ile belirtiriz.
+        on DELETE CASCADE // eğer departman silinirse projede silinecek. 
+        ON UPDATE CASCADE
+    
+)ENGINE = INNODB;
+
+eğer foreign keyli bir tablo oluşturursak eğer referans alacağı tablonun önceden üretilmiş olması lazım. sonuçta bir yere bağlanacak.
+bir projeye olmayan bir departman ekleneme. bunun nedeni foreign key olmayan bir değere bağlanamaz referans olması için o değerin olması lazım.
+
+mesela elimizde 3 tane tablo var t1,t2,t3 eğer select * from t1,t2,t3; yaparsak tabloların değerlerinin 3lü kombinasyonlarını getirir t1,t2,t3 sırası ile.
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 ##################################################################################################################################################################
