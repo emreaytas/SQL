@@ -178,11 +178,52 @@ CREATE table if not EXISTS projeler(
 eğer foreign keyli bir tablo oluşturursak eğer referans alacağı tablonun önceden üretilmiş olması lazım. sonuçta bir yere bağlanacak.
 bir projeye olmayan bir departman ekleneme. bunun nedeni foreign key olmayan bir değere bağlanamaz referans olması için o değerin olması lazım.
 
-mesela elimizde 3 tane tablo var t1,t2,t3 eğer select * from t1,t2,t3; yaparsak tabloların değerlerinin 3lü kombinasyonlarını getirir t1,t2,t3 sırası ile.
+mesela elimizde 3 tane tablo var t1,t2,t3 eğer select * from t1,t2,t3; yaparsak tabloların değerlerinin 3lü kombinasyonlarını getirir t1,t2,t3 sırası ile. kartezyen çarpım yani kombinasyonları getirir. t1 3 değer t2 4 değer t3 5 değer olsaydı 3*4*5 tane kombinasyon olacaktı.
+
+foreign key olacak değerler referans verecek olan değerin aynı tip olması lazım.
+
+select * from calisan,departman,projeler where calisan.dept = departman.id and departman.id = projeler.departman_id; calisanin departmanı departmanın id'sine eşit olacak ve projenin departman id'si departman'ın id'sine eşit olacak. 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+////Outer Join Kurulması.Left ve Right Outer Join////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+iki üzerinde join kurulurken left ve right Outer join nasıl kurulur bundan bahsedeceğiz.
+
+mesela bir tabloya birden fazla satırı aynı anda eklemek istersek
+  INSERT INTO `calisan` (`id`, `isim`, `maas`, `dept`) VALUES ('17', 'ahmet', '8989', '1'), ('18', 'mehmet', '4324', '1'); bu yapıyı kullanabiliriz.
+  insert into db.table(eklenecek değerler sırası ile eğer bu parantez olmazsa default olan halinin sırasına göre değerleri atayacak.) values(ilksatırındeğerleri),(ikincisatırındeğerleri),(ucuncusatirindeğerleri);
+
+mesela select * from calisan where calisan.dept = departman.id; // bu inner join ikisinin aynı olma durumu outer join ise null olma durumda ortaya çıkar.
+
+......örnek olarak iki tane tablomuz olsun calisan ve departman.
+use emre;
+
+CREATE TABLE IF NOT EXISTS calisan(
+   id INT PRIMARY KEY,
+   ismi varchar(20),
+   maas INT(11), 
+   dept INT(11)
+)ENGINE = INNODB;
+
+CREATE TABLE IF not EXISTS  departman(
+  id INT(11) PRIMARY KEY,
+  ismi varchar(20),
+  butce INT(11),
+  yonetici INT(11)
+    
+)ENGINE = INNODB;
+
+iki tane tablomuzu oluşturduk. select * from calisan,departman where calisan.dept = departman.id; calisan ve departmanı yan yana yazılacak satır satır ama dept'i null olan veya tabloda olmayan bir departman numarasına sahip olan calisanlar gelmeyecek sorgu ile.
+  bunun önüne geçmek için outer join kullanmak lazım. 
+
+select aslında tümünü getir gibi bir mantıkla çalışır iki tane tablo select * from ettiğimiz zaman tüm değerler kombinasyonları ile gelir bunun nedeni tüm değerleri getirebilmek içindir.
+
+select * from calisan,departman where calisan.dept = departman.id; yaparsak eğer bu inner join olur ama null(veya eşitliği sağlamayan herhangi bir çalışanı olmayan departöan veya herhangi bir departmanda olmayan çalışan) olan bir calisan.dept veya departman.id uygun değilse outer join o zaman devreye giriyor.
+   
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ##################################################################################################################################################################
 
