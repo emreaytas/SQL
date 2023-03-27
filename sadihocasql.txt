@@ -7,6 +7,24 @@ phpmyadmin ile çalışacağız.
 ..select komutu sorgulamak için kullanılır. sorgu olarak yollaruz meseka select 4 * 5 dedik ve go dedik o zaman bize 20 cevabını verir. komut veririz ve sonuç verir. komut veririz ve bir sonuç döndürmeye çalışır. select'ten sonra gelecek olan komuta göre işlem yaparız.
 select 4 * 5 as veli; dersek eğer o zaman bana sonucu veli isminde getir deriz. select ali as veli dersek ali'yi bize veli sutununda getirecek..
 
+veritabanları birden fazla sunucularda bulunabilir.
+
+as isimlendirme için kullanılır aslında. select 4 * 5 as veli demek veli adı altında sonucu getir demek. 
+
+tarih eklenirken nokta tire slaş gibi şeylerle ayrılması lazım... 2020/10/19   2020.10.19  2020-10-19 gibi...
+
+eğer bilgi kalırsa null alır.
+
+select kolonisimleri(...) where a = b(a ve b kolon ismi) order by a,b; bu yapı ile kolon isimleri aynı olanları alırız ve istediğimiz gibi sıralarız............   SELECT araba.marka,araba.model FROM emre.araba WHERE marka = model ORDER by marka,model;
+
+order by ile kolonları istediğimiz sıra ile sıralarız.
+
+where kosulunda and ve or kullanılanilir koşullar arasında bağlantı kurulabilir. 
+
+now(); şimdiki zamanı return eder select ile sonucu alabiliriz.
+
+isim varchar olarak kullanırsak eğer dinamik olarak kullanabiliriz.
+
 eğer varchar olursa dinamik olur bu yüzden eğer her seferinde bir değer belii uzunlukta gelecekse varchar(11) gibi tanımlayabiliriz. ama sürekli değişecekse o zaman dinamik karakter dizisi(text) olabilir... varchar(10) olursa her sütün için o kadar karakter yer ayırır...
 
 date zaman gün ay yıl datetime ise saat bilgiside tutar.
@@ -88,6 +106,9 @@ update db.table set isim = "bmw"; yaparsak eğer her ismi bmw yapar. çünkü bi
 
 koşula göre bir tablodan veri silmek istersek eğer o zaman 
 
+UPDATE emre.araba set marka = "emre"; // where eklemezsek hepsini kabul eder ve hepsinin markası emre olur...
+ 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -101,10 +122,19 @@ bir tabloyu drop etmek istersek o zaman drop table db.table(veya direkt sadece t
 mesela bir kolunu düşürmek istersek o zzmaan alter table (çünkü tabloda bir değişim olacak.) db.tablo drop column(kolon düşür) kolonismi;
    alter table emre.tdci drop column telefon; böylece kişilerdeki telefon bilgisi gider.
 
+drop database veya table dersek eğer bilgiler kaybolur buna dikkat etmek gerekir.
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+alter table emre.araba drop primary key; // bunu dersek eğer tüm primary keyler silinecek. veriler kaybolmayacak ancak o andan itibaren o sütün primary key özelliği taşımayacak...
+
+alter table emre.araba add primary key marka dedik mesela ama önceden eklenmiş verileride iki tane aynı marka var(sadece markaya primary key eklediğimizi varsayarsak eğer.) hata verir. 
 
 //...Birincil anahtar (primary key)...//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+her tabloda sadece bir tane primary key bulunabilir.
+
+primary key NULL olamaz ama bazı veritabanları NULL'ı değer olarak kabul ederek sadece bir tane olmasına izin verir.
 
 primary key aslında bir koşuldur...
 mesela bir tabloda primary key olan bir alan var ve biz onun primary key olmasını istemiyoruz artık o zaman alter table drop primary key
@@ -175,7 +205,10 @@ INSERT INTO emre.departman VALUES('2','bilisim','100000','16');
 eğer bu tablolarda select * from calisan, departman where calisan.dept = departman.id; // yani ne demek olur calisanların yanına calisanin içindeki departman numarasının departmanı gelir.
 
 
-mesela select * from tablo1,tablo2 dedik. o zaman satır satır önce tablo1'in ilk satırını yanına tablo2'nin ilk satırını getirir. tabloların satırları yan yana olarak satır satır yazılır.   
+mesela select * from tablo1,tablo2 dedik. o zaman satır satır önce tablo1'in ilk satırını yanına tablo2'nin ilk satırını getirir. tabloların satırları yan yana olarak satır satır yazılır.  where kosulu ile ilişki kurmazsak eğer tüm kombinasyonlar gelir.
+
+
+mesela select tablo1,tablo2 where tablo1.deptid = tablo2.id; böylece karşılıklı olarak birbirine id olarak uyanlar gelir. where kullanmazsak eğer o zaman tüm kombinasyonlar gelir.
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -202,8 +235,21 @@ foreign key olacak değerler referans verecek olan değerin aynı tip olması la
 
 select * from calisan,departman,projeler where calisan.dept = departman.id and departman.id = projeler.departman_id; calisanin departmanı departmanın id'sine eşit olacak ve projenin departman id'si departman'ın id'sine eşit olacak. 
 
+... eğer bir tabloya bir veriyi ikincil anhatar olarak göndereceksek o zaman gönderilenin belirleyici değeri mesela id primary olmalıdır(veya) unique. ve mesela bir tablonun belirleyici değerini ikinci anahtar yapacağız bunu alan tablodaki alanda o anahtarın tipinde olmalı int ise int olarak onu karşılamalı.
+
+foreign key bağladığınız tablodaki primary keylerden birisi olmalıdır. eğer olmayan bir primary key değeri yollarsak hata alırız.
+
+foreign key olacak değerleri alan bir tabloya ihtiyacımız var diğer foreign key veren tablodan gelen değerin tipinde olmalıdır. mesela birden fazla primary key olan tablo var foreign key veren tabloda o zaman alacak tablodada o değerleri taşıyacak kolonlar olması lazım...
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+eğer tek bir kolon primary key olacaksa o zaman onun yanına primary key koyabiliriz. ama eğer birden fazla kolon aynı anda primary key olacaksa o zaman önce kolonları tanımlamak sonra primary key(kolonlar) yapmamız lazım tek satır halinde.
+CREATE table if not EXISTS motor(
+   id int , 
+   motorno varchar(10),
+   hacim varchar(4),
+   PRIMARY key(id,motorno) // birden fazla kolon primary key olacağı için tek bir satır halinde koyduk.
+)ENGINE = INNODB;
 
 ////Outer Join Kurulması.Left ve Right Outer Join////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -249,4 +295,3 @@ select * from calisan,departman where calisan.dept = departman.id; yaparsak eğe
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ##################################################################################################################################################################
-
