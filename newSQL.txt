@@ -1,0 +1,114 @@
+sanal makineden normal bilgisayara geçmek için ctrl + alt kullanmamız lazım...
+####...SQL...################################################################################################################################################################################################################################################################################################################################
+
+veritabanları ile iletişim kurduğumuz veri tabanı sorgulama dilir. veri tabanları ile istenen işlemleri bu dil ile kurarız.
+
+temel sql komutları = select, insert, delete, update, delete, create, alter,drop... gibi komutlardır. 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+numeric = bit, tinyint, smallint, int, bigint, decimal, numeric, float, real // genel olarak sayısal veriler çoğunlukla int kullanılır.
+date/time = Date,Time,Datetime,Timestamp,Year // zaman tarih gibi işlemler için kullanılır.
+character/string = Char, Varchar(max), Text 
+unicode character/string = NChar,NVarchar,NVarchar(max),NText
+Binary = Binary,Varbinary,Varbinary(max),image
+miscellaneous = Clob,Blob,XML,JSON
+
+her kolunun veritipi farklıdır... kullanışa göre işlem yapmak gerekecek.
+
+..............................................
+AVG() kolonun ortalama değerini getirir.
+COUNT() satır sayısını verir.
+ROUND() sayıları yuvarlar.
+FIRST() ilk değeri verir.
+LAST() son değeri verir.
+MAX() en büyük değeri verir.
+MIN() en küçük değeri verir.
+SUM() kolonu toplar.
+LCASE() metinleri küçük hale getirir. caps locksuz haline yani.
+UCASE() metinleri caps locklu hale getirir.
+LEN() bir alanın karakter sayısını verir.
+MID() metinden parça alır
+NOW() anın tarihini ve saatini verir.
+FORMAT() verinin gösterilme biçimini gösterir. 
+...............................................
+
+eğer bir databaseye biz excel dosyası bağlamak istersek database üzerinde ssağ tık task deriz sonra import data deriz sonra ise import edeceğimiz veri tutan tipi belirleriz.
+   veritabanının iletişim kurabilmesi için acsess database engine indirmemiz lazım...
+
+where ile istenen değerler üzerinde işlem yapabileceğiz. and ve or ile de koşul birleştirme yapabileceğiz.
+
+sql'de yorum satırı --tek satır /**/ ile ise çoklu satır olarak kullanılır.
+
+select * from where like 'm%'; bu şekilde olursa m ile başlayanları getir demek.
+select * from where like '%a'; sonunda a olnalrı getir demek.
+
+select * from where like '%va%'; içerisinde va bütünü olanları getir.
+
+alter table demek tabloda bir değişiklik olacak demek.
+...............................................
+alter table db.table add column barcod varchar(4);
+
+update table set barkod = '1234';
+
+hepsi 1234 olur ayrı bir kolon eklenmiş olur
+
+alter table db.table drop column [barcod]; barkod kolonu düşer.
+
+...............................................
+
+inner join = iki tablonun kesişimi 
+left Join = soldaki tablo ile soldaki tablonun sağdaki tablo ile kesişimi getirilir.
+right join = sağdaki tablo ile sağdaki tablonun soldaki tablo ile kesişimi getirilir.
+full join = iki tabloyu birleştirir.
+
+left joinde soldaki tablonun herşeyi ve öbür tablo ile sağlanan değerler getirilir.
+right joinde ise sağdaki tablonun tamamı ve soldaki tablo ile sağlanan koşullu değerler yani kesişim
+   ikisinde de karşılık olmayanlar NULL alır.
+
+full joinde ise iki tablonun birleşimi gelir karşılığı olmayanlar ise null alacak yine.     
+
+right ve left joinde aslında karşılığı olmayanlar null alır o kadar.
+...............................................
+
+create table urunler(
+
+ urunid int,
+ urunismi varchar(50)
+
+);
+
+create table satislar(
+
+ musteriid int,
+ musteriismi varchar(50),
+ urunid int 
+)
+
+
+select * from satislar inner join on satislar.id = urunler.urunid;
+    -- bu bir inner joindir.
+
+select * from satislar left join on satislar.id = urunler.urunid;
+    -- soldaki tablonun tüm değerleri gelecek ve kesişim gelecek. soldaki karşığılı olmayanın normalde kesişim ile gelen karşılığı ise null olacak.
+
+select * from satislar right join on satislar.id = urunler.urunid;
+    -- sağdakinin tüm değerleri ve kesişim gelcek. sağdakinin karşılığı olmayanlar ise o zaman null olacak.
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+as ile isim değişikliği vs yapabiliriz.
+
+select * from satislar as s full join urunler as u on s.urunid = u.urunid; böylece isim değişikliği vs yapabiliriz.
+......................................................................
+
+select sum(satislar.satisadedi) as toplamsatisadeti(kolon belirledik gelecek değere) from satislar; tüm satışların ortalamasını alırız.
+
+select avg(satislar.satisadedi) as ortalamasatisadedi from satislar; --ortalama satis adeti
+       max() ile en fazla satis adetini getirir.
+       min() ile en az satis adetini gösterir.
+       round(min(satislar.satisadedi),2) --virgülden sonra 2 haneye izin verdi. as minadet from satislar.
+     
+
+####################################################################################################################################################################################################################################################################################################################################3
+
